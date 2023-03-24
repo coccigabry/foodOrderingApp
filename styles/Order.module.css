@@ -1,0 +1,68 @@
+.container {
+  padding: 50px;
+  display: flex;
+}
+
+.left {
+  flex: 2;
+}
+
+.table {
+  width: 100%;
+  text-align: left;
+  margin-bottom: 50px;
+}
+
+.right {
+  flex: 1;
+}
+
+/* -------------- MEDIA QUERIES ----------------- */
+
+@media screen and (max-width: 480px) {
+  .container {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .table {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .trTitle {
+    display: none;
+  }
+
+  .trData {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 20px;
+  }
+
+  .id::before {
+    content: "Order no: ";
+    font-weight: 500;
+  }
+
+  .name::before {
+    content: "Name: ";
+    font-weight: 500;
+  }
+
+  .address::before {
+    content: "Total: ";
+    font-weight: 500;
+  }
+
+  .total::before {
+    content: "Total: ";
+    font-weight: 500;
+  }
+}
