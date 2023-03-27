@@ -1,10 +1,17 @@
 import styles from '../styles/Cart.module.css'
 import Image from 'next/image'
 import { Total } from '@/components/Total'
+import { useDispatch, useSelector } from 'react-redux'
 
 
 
 const Cart = () => {
+
+    const cart = useSelector(store => store)
+
+    const dispatch = useDispatch()
+
+
     return (
         <div className={styles.container}>
             <div className={styles.left}>
@@ -20,33 +27,41 @@ const Cart = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr className={styles.trData}>
-                            <td>
-                                <div className={styles.imgContainer}>
-                                    <Image
-                                        src='/assets/burger.png'
-                                        alt='burger image'
-                                        fill
-                                        style={{ objectFit: 'contain' }}
-                                    />
-                                </div>
-                            </td>
-                            <td>
-                                <span className={styles.name}>CHICKEN BREAST</span>
-                            </td>
-                            <td>
-                                <span className={styles.extras}>Bacon, Avocado</span>
-                            </td>
-                            <td>
-                                <span className={styles.price}>€ 9.90</span>
-                            </td>
-                            <td>
-                                <span className={styles.quantity}>x 2</span>
-                            </td>
-                            <td>
-                                <span className={styles.total}>€ 19.80</span>
-                            </td>
-                        </tr>
+                        {
+                            cart.products.map(prod => (
+                                <tr className={styles.trData} key={prod._id}>
+                                    <td>
+                                        <div className={styles.imgContainer}>
+                                            <Image
+                                                src={prod.img}
+                                                alt='burger image'
+                                                fill
+                                                style={{ objectFit: 'contain' }}
+                                            />
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span className={styles.name}>{prod.title}</span>
+                                    </td>
+                                    <td>
+                                        <span className={styles.extras}>
+                                            {
+                                                prod.extras.map(extra => <span key={extra._id}>{extra.text}<br /></span>)
+                                            }
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span className={styles.price}>€ {prod.price.toFixed(2)}</span>
+                                    </td>
+                                    <td>
+                                        <span className={styles.quantity}>x {prod.quantity}</span>
+                                    </td>
+                                    <td>
+                                        <span className={styles.total}>€ {(prod.price * prod.quantity).toFixed(2)}</span>
+                                    </td>
+                                </tr>
+                            ))
+                        }
                     </tbody>
                 </table>
             </div>

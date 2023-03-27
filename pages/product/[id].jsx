@@ -2,12 +2,18 @@ import Image from 'next/image'
 import { useState } from 'react'
 import styles from '../../styles/Product.module.css'
 import axios from 'axios'
+import { useDispatch } from 'react-redux'
+import { addProduct } from '@/redux/features/cartSlice'
 
 
 const Product = ({ burger }) => {
 
     const [menuSize, setMenuSize] = useState(0)
     const [price, setPrice] = useState(burger.prices[0])
+    const [extras, setExtras] = useState([])
+    const [quantity, setQuantity] = useState(1)
+
+    const dispatch = useDispatch()
 
 
     const changePrice = (num) => {
@@ -20,11 +26,16 @@ const Product = ({ burger }) => {
         changePrice(diff)
     }
 
-    const handleExtra = (e, extra) => {
+    const handleExtra = (e, option) => {
         const isChecked = e.target.checked
 
-        isChecked ? changePrice(extra.price) : changePrice(-extra.price)
-
+        if (isChecked) {
+            changePrice(option.price)
+            setExtras(prev => [...prev, option])
+        } else {
+            changePrice(-option.price)
+            setExtras(extras.filter(extra => extra._id !== option._id))
+        }
     }
 
 
@@ -57,23 +68,30 @@ const Product = ({ burger }) => {
                 <h3 className={styles.choose}>Additional ingredients</h3>
                 <div className={styles.ingredients}>
                     {
-                        burger.extras.map(extra => (
-                            <div className={styles.ingredient} key={extra._id}>
+                        burger.extras.map(option => (
+                            <div className={styles.ingredient} key={option._id}>
                                 <input
                                     type="checkbox"
-                                    id={extra.text}
-                                    name={extra.text}
+                                    id={option.text}
+                                    name={option.text}
                                     className={styles.checkbox}
-                                    onChange={(e) => handleExtra(e, extra)}
+                                    onChange={(e) => handleExtra(e, option)}
                                 />
-                                <label htmlFor={extra.text}>{extra.text}</label>
+                                <label htmlFor={option.text}>{option.text}</label>
                             </div>
                         ))
                     }
                 </div>
                 <div className={styles.add}>
-                    <input id="input-number" type="number" defaultValue={1} className={styles.quantity} min={1} />
-                    <button className={styles.button}>Add to Cart</button>
+                    <input
+                        id="input-number"
+                        type="number"
+                        defaultValue={1}
+                        min={1}
+                        className={styles.quantity}
+                        onChange={(e) => setQuantity(e.target.value)}
+                    />
+                    <button className={styles.button} onClick={() => dispatch(addProduct({ ...burger, extras, price, quantity }))}>Add to Cart</button>
                 </div>
             </div>
         </div>
