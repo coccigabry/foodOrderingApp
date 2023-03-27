@@ -2,7 +2,7 @@ import styles from '../styles/FoodList.module.css'
 import FoodCard from './FoodCard'
 
 
-const FoodList = () => {
+const FoodList = ({ foodList }) => {
 
     return (
         <div className={styles.container}>
@@ -14,14 +14,9 @@ const FoodList = () => {
                 habitasse platea dictumst vestibulum rhoncus est pellentesque elit.
             </p>
             <div className={styles.wrapper}>
-                <FoodCard />
-                <FoodCard />
-                <FoodCard />
-                <FoodCard />
-                <FoodCard />
-                <FoodCard />
-                <FoodCard />
-                <FoodCard />
+                {
+                    foodList.map(food => <FoodCard key={food._id} food={food} />)
+                }
             </div>
         </div>
     )

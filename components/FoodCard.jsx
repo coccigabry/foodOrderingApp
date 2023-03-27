@@ -1,17 +1,18 @@
 import styles from '../styles/FoodCard.module.css'
 import Image from 'next/image'
+import Link from 'next/link'
 
 
-const FoodCard = () => {
+const FoodCard = ({ food }) => {
 
     return (
         <div className={styles.container}>
-            <Image src='/assets/burger.png' alt='burger image' width={300} height={300} style={{ objectFit: 'contain' }} />
-            <h1 className={styles.title}>BURGER #0</h1>
-            <span className={styles.price}>€ 9.90</span>
-            <p className={styles.desc}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            </p>
+            <Link href={`/product/${food._id}`} passHref>
+                <Image src={food.img} alt='burger image' width={300} height={300} style={{ objectFit: 'contain' }} />
+            </Link>
+            <h1 className={styles.title}>{food.title}</h1>
+            <span className={styles.price}>€ {food.prices[0]}</span>
+            <p className={styles.desc}>{food.desc}</p>
         </div>
     )
 }

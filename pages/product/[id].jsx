@@ -1,18 +1,30 @@
 import Image from 'next/image'
 import { useState } from 'react'
 import styles from '../../styles/Product.module.css'
+import axios from 'axios'
 
 
-const Product = () => {
+const Product = ({ burger }) => {
 
     const [menuSize, setMenuSize] = useState(0)
+    const [price, setPrice] = useState(burger.prices[0])
 
-    const burger = {
-        id: 1,
-        img: '/assets/burger.png',
-        name: 'Classic Burger',
-        price: [9.90, 12.90, 15.90],
-        desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+
+    const changePrice = (num) => {
+        setPrice(price + num)
+    }
+
+    const handleMenuSize = (menuIdx) => {
+        const diff = burger.prices[menuIdx] - burger.prices[menuSize]
+        setMenuSize(menuIdx)
+        changePrice(diff)
+    }
+
+    const handleExtra = (e, extra) => {
+        const isChecked = e.target.checked
+
+        isChecked ? changePrice(extra.price) : changePrice(-extra.price)
+
     }
 
 
@@ -24,46 +36,40 @@ const Product = () => {
                 </div>
             </div>
             <div className={styles.right}>
-                <h1 className={styles.title}>{burger.name}</h1>
-                <span className={styles.price}>€ {burger.price[menuSize]}</span>
+                <h1 className={styles.title}>{burger.title}</h1>
+                <span className={styles.price}>€ {price.toFixed(2)}</span>
                 <p className={styles.desc}>{burger.desc}</p>
                 <h3 className={styles.choose}>Choose your menu</h3>
                 <div className={styles.menus}>
-                    <div className={styles.menu} onClick={() => setMenuSize(0)}>
+                    <div className={styles.menu} onClick={() => handleMenuSize(0)}>
                         <Image src='/assets/size.png' alt='menu icon' fill />
                         <span className={styles.size}>Small</span>
                     </div>
-                    <div className={styles.menu} onClick={() => setMenuSize(1)}>
+                    <div className={styles.menu} onClick={() => handleMenuSize(1)}>
                         <Image src='/assets/size.png' alt='menu icon' fill />
                         <span className={styles.size}>Medium</span>
                     </div>
-                    <div className={styles.menu} onClick={() => setMenuSize(2)}>
+                    <div className={styles.menu} onClick={() => handleMenuSize(2)}>
                         <Image src='/assets/size.png' alt='menu icon' fill />
                         <span className={styles.size}>XXL</span>
                     </div>
                 </div>
                 <h3 className={styles.choose}>Additional ingredients</h3>
                 <div className={styles.ingredients}>
-                    <div className={styles.ingredient}>
-                        <input type="checkbox" id="bacon" name="bacon" className={styles.checkbox} />
-                        <label htmlFor="bacon">Bacon</label>
-                    </div>
-                    <div className={styles.ingredient}>
-                        <input type="checkbox" id="cheese" name="cheese" className={styles.checkbox} />
-                        <label htmlFor="cheese">Cheese</label>
-                    </div>
-                    <div className={styles.ingredient}>
-                        <input type="checkbox" id="egg" name="egg" className={styles.checkbox} />
-                        <label htmlFor="egg">Egg</label>
-                    </div>
-                    <div className={styles.ingredient}>
-                        <input type="checkbox" id="jalapeno" name="jalapeno" className={styles.checkbox} />
-                        <label htmlFor="jalapeno">Jalapeno</label>
-                    </div>
-                    <div className={styles.ingredient}>
-                        <input type="checkbox" id="avocado" name="avocado" className={styles.checkbox} />
-                        <label htmlFor="avocado">Avocado</label>
-                    </div>
+                    {
+                        burger.extras.map(extra => (
+                            <div className={styles.ingredient} key={extra._id}>
+                                <input
+                                    type="checkbox"
+                                    id={extra.text}
+                                    name={extra.text}
+                                    className={styles.checkbox}
+                                    onChange={(e) => handleExtra(e, extra)}
+                                />
+                                <label htmlFor={extra.text}>{extra.text}</label>
+                            </div>
+                        ))
+                    }
                 </div>
                 <div className={styles.add}>
                     <input id="input-number" type="number" defaultValue={1} className={styles.quantity} min={1} />
@@ -73,5 +79,16 @@ const Product = () => {
         </div>
     )
 }
+
+
+export const getServerSideProps = async ({ params }) => {
+    const res = await axios.get(`http://localhost:3000/api/products/${params.id}`)
+    return {
+        props: {
+            burger: res.data
+        }
+    }
+}
+
 
 export default Product

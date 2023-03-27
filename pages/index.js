@@ -1,9 +1,10 @@
 import Head from 'next/head'
-import styles from '@/styles/Home.module.css'
 import { Slider, FoodList } from '@/components'
+import axios from 'axios'
 
 
-export default function Home() {
+export default function Home({ foodList }) {
+
   return (
     <>
       <Head>
@@ -13,7 +14,17 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Slider />
-      <FoodList />
+      <FoodList foodList={foodList} />
     </>
   )
+}
+
+
+export const getServerSideProps = async () => {
+  const res = await axios.get('http://localhost:3000/api/products')
+  return {
+    props: {
+      foodList: res.data
+    }
+  }
 }
