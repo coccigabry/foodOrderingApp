@@ -1,4 +1,4 @@
-import Product from "@/models/Product"
+import Order from "@/models/Order"
 import dbConnect from "@/utils/mongoConnect"
 
 
@@ -10,8 +10,8 @@ export default async function handler(req, res) {
 
     if (method === 'GET') {
         try {
-            const product = await Product.findById(id)
-            res.status(201).json(product)
+            const order = await Order.findById(id)
+            res.status(201).json(order)
         } catch (err) {
             res.status(500).json(err)
         }
@@ -27,7 +27,7 @@ export default async function handler(req, res) {
 
     if (method === 'DELETE') {
         try {
-            await Product.findByIdAndDelete(id)
+            await Order.findByIdAndDelete(id)
             res.status(201).json('deleted')
         } catch (err) {
             res.status(500).json(err)

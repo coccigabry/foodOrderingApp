@@ -1,15 +1,13 @@
 import styles from '../styles/Cart.module.css'
 import Image from 'next/image'
 import { Total } from '@/components/Total'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 
 
 const Cart = () => {
 
     const cart = useSelector(store => store)
-
-    const dispatch = useDispatch()
 
 
     return (
@@ -73,5 +71,3 @@ const Cart = () => {
 }
 
 export default Cart
-
-//  className={styles.container}

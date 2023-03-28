@@ -1,9 +1,12 @@
 import styles from '../../styles/Order.module.css'
 import { Total } from '@/components/Total'
 import Status from '@/components/Status'
+import axios from 'axios'
 
 
-const Order = () => {
+const Order = ({ yourOrder }) => {
+
+    const status = yourOrder.status
 
     return (
         <div className={styles.container}>
@@ -19,24 +22,28 @@ const Order = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr className={styles.trData}>
-                                <td>
-                                    <span className={styles.id}>3582430663</span>
-                                </td>
-                                <td>
-                                    <span className={styles.name}>Cocci Gabry</span>
-                                </td>
-                                <td>
-                                    <span className={styles.address}>16158 Voltri (GE)</span>
-                                </td>
-                                <td>
-                                    <span className={styles.total}>€ 19.80</span>
-                                </td>
-                            </tr>
+                            {
+                                yourOrder.map(order => (
+                                    <tr className={styles.trData} key={order._id}>
+                                        <td>
+                                            <span className={styles.id}>{order._id}</span>
+                                        </td>
+                                        <td>
+                                            <span className={styles.name}>{order.customer}</span>
+                                        </td>
+                                        <td>
+                                            <span className={styles.address}>{order.address}</span>
+                                        </td>
+                                        <td>
+                                            <span className={styles.total}>€ {order.total}</span>
+                                        </td>
+                                    </tr>
+                                ))
+                            }
                         </tbody>
                     </table>
                 </div>
-                <Status />
+                <Status status={status} />
             </div>
             <div className={styles.right}>
                 <Total page='order' />
@@ -44,5 +51,14 @@ const Order = () => {
         </div>
     )
 }
+
+
+const getServerSideProps = async ({ params }) => {
+    const res = await axios.get(`http://localhost:3000/api/orders/${params._id}`)
+    return {
+        props: { yourOrder: res.data }
+    }
+}
+
 
 export default Order

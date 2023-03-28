@@ -2,9 +2,9 @@ import styles from '../styles/Status.module.css'
 import Image from 'next/image'
 
 
-const Status = () => {
+const Status = ({ status }) => {
 
-    const status = 0
+    const status = status
 
     const statusClass = (index) => {
         if (index - status < 1) return styles.done
