@@ -13,7 +13,6 @@ A Full-Stack JavaScript webApp built with Next.js and MongoDB. Payment made via 
 
 - Next.js 13+
 - Redux for state managment
-- Axios for HTTP requests
 - MongoDB (with Mongoose ODM)
 
 ## Prerequisites
